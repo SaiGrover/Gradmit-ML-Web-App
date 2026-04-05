@@ -90,7 +90,9 @@ gradmit/
 ## API Endpoints
 
 POST /api/predict → Returns admission probability
+
 GET /api/dataset → Returns dataset with filters
+
 GET /api/metrics → Returns model performance
 
 ---
