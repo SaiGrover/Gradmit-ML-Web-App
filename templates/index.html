@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GradAdmit — Graduate Admission Predictor</title>
+<meta name="description" content="ML-powered graduate school admission predictor. JIIT Noida Capstone Project — Saanvi Grover.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+{# Pass server-computed metrics to JS so charts work even if /api/metrics is slow #}
+<script>
+  window.__METRICS__ = {{ metrics | tojson }};
+</script>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">🎓</div>
+    Grad<em>Admit</em>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-tab="home">Home</button>
+    <button class="nav-tab" data-tab="predictor">Predictor</button>
+    <button class="nav-tab" data-tab="analytics">Analytics</button>
+    <button class="nav-tab" data-tab="code">Code</button>
+    <button class="nav-tab" data-tab="data">Dataset</button>
+    <button class="nav-tab" data-tab="about">About</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HOME
+══════════════════════════════════════════ -->
+<div class="section active" id="section-home">
+  <div class="home-layout">
+    <!-- LEFT -->
+    <div class="home-left">
+      <div class="home-badge">Capstone · JIIT Noida · AI &amp; Data Analytics</div>
+      <h1 class="home-h1">
+        Predict Your<br>
+        <span class="hl">Grad School</span><br>
+        <span class="hl2">Admission Chances</span>
+      </h1>
+      <p class="home-sub">
+        A machine learning system powered by Logistic Regression that analyses your
+        academic profile — GRE, TOEFL, CGPA, research, SOP &amp; more — to give you
+        a data-driven admission probability.
+      </p>
+      <div class="home-btns">
+        <button class="btn-primary" id="btn-go-predictor">Try the Predictor →</button>
+        <button class="btn-secondary" id="btn-go-analytics">View Analytics</button>
+      </div>
+      <div class="home-chips">
+        <div class="chip"><b>{{ metrics.accuracy }}%</b> Accuracy</div>
+        <div class="chip"><b>{{ metrics.auc }}</b> AUC Score</div>
+        <div class="chip"><b>500</b> Records</div>
+        <div class="chip"><b>7</b> Features</div>
+        <div class="chip"><b>Logistic Regression</b></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Live stat card -->
+    <div class="home-right">
+      <div class="stat-card-big">
+        <div class="sc-title">Model Performance Dashboard</div>
+        <div class="kpi-row">
+          <div class="kpi"><span class="kpi-val green">{{ metrics.accuracy }}%</span><div class="kpi-lbl">Accuracy</div></div>
+          <div class="kpi"><span class="kpi-val blue">{{ metrics.auc }}</span><div class="kpi-lbl">AUC Score</div></div>
+          <div class="kpi"><span class="kpi-val amber">{{ metrics.precision }}%</span><div class="kpi-lbl">Precision</div></div>
+          <div class="kpi"><span class="kpi-val red">{{ metrics.recall }}%</span><div class="kpi-lbl">Recall</div></div>
+        </div>
+        <div style="font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem;">Feature Importance</div>
+        {% set coef_items = metrics.coefficients.items() | list | sort(attribute='1', reverse=True) %}
+        {% set max_coef = coef_items[0][1] %}
+        {% set bar_colors = ['var(--accent)', 'var(--accent2)', 'var(--accent3)', '#a78bfa', 'var(--accentr)'] %}
+        {% for feat, val in coef_items[:5] %}
+        <div class="mini-bar-row">
+          <div class="mini-bar-lbl">{{ feat.replace('_', ' ') }}</div>
+          <div class="mini-bar-bg">
+            <div class="mini-bar-fill" style="width:{{ ((val / max_coef) * 100) | round | int }}%;background:{{ bar_colors[loop.index0] }};"></div>
+          </div>
+          <div class="mini-bar-val">{{ val }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature cards -->
+  <div class="features-section">
+    <div class="features-header">
+      <h2>What's Inside</h2>
+      <p>Six modules covering every aspect of the Graduate Admission Prediction project</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card"><div class="feat-num">01</div><div class="feat-icon">🎯</div><h3>Live Predictor</h3><p>Enter your academic stats and instantly get your admission probability with feature contribution breakdown and personalised tips.</p></div>
+      <div class="feat-card"><div class="feat-num">02</div><div class="feat-icon">📊</div><h3>Analytics Dashboard</h3><p>Interactive charts with filters — confusion matrix, ROC curve, feature coefficients, class distribution, and comparison charts.</p></div>
+      <div class="feat-card"><div class="feat-num">03</div><div class="feat-icon">💻</div><h3>Jupyter Code Viewer</h3><p>Browse the actual notebook code cell by cell — data loading, EDA, model training, evaluation, and failed model comparisons.</p></div>
+      <div class="feat-card"><div class="feat-num">04</div><div class="feat-icon">🗄️</div><h3>Dataset Explorer</h3><p>Search, filter and paginate through all 500 student records from the Kaggle Graduate Admission dataset.</p></div>
+      <div class="feat-card"><div class="feat-num">05</div><div class="feat-icon">🔬</div><h3>EDA Insights</h3><p>CGPA above 8.5 and research experience are the top differentiators — backed by correlation analysis and boxplots.</p></div>
+      <div class="feat-card"><div class="feat-num">06</div><div class="feat-icon">📋</div><h3>Full Report</h3><p>Methodology, model coefficients table, preprocessing steps, and future enhancement roadmap all in the About section.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PREDICTOR
+══════════════════════════════════════════ -->
+<div class="section" id="section-predictor">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h2>Admission Predictor</h2>
+      <p>Adjust sliders to match your profile — prediction calls the Flask API in real time.</p>
+    </div>
+  </div>
+  <div class="predictor-layout">
+    <!-- Input panel -->
+    <div class="panel">
+      <div class="panel-title">Academic Profile</div>
+
+      <div class="field-group">
+        <div class="field-label">GRE Score (out of 340) <span class="val-badge" id="gre-val">316</span></div>
+        <input type="range" id="gre" min="290" max="340" value="316">
+      </div>
+      <div class="field-group">
+        <div class="field-label">TOEFL Score (out of 120) <span class="val-badge" id="toefl-val">107</span></div>
+        <input type="range" id="toefl" min="92" max="120" value="107">
+      </div>
+      <div class="field-group">
+        <div class="field-label">University Rating (1–5) <span class="val-badge" id="urating-val">3</span></div>
+        <input type="range" id="urating" min="1" max="5" value="3" step="1">
+      </div>
+      <div class="field-group">
+        <div class="field-label">SOP Strength (1–5) <span class="val-badge" id="sop-val">3.5</span></div>
+        <input type="range" id="sop" min="1" max="5" value="3.5" step="0.5">
+      </div>
+      <div class="field-group">
+        <div class="field-label">LOR Strength (1–5) <span class="val-badge" id="lor-val">3.5</span></div>
+        <input type="range" id="lor" min="1" max="5" value="3.5" step="0.5">
+      </div>
+      <div class="field-group">
+        <div class="field-label">CGPA (out of 10) <span class="val-badge" id="cgpa-val">8.58</span></div>
+        <input type="range" id="cgpa" min="6.8" max="10" value="8.58" step="0.01">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Research Experience</div>
+        <div class="toggle-group">
+          <button class="toggle-btn" id="res-no">No Research</button>
+          <button class="toggle-btn active" id="res-yes">Has Research</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result panel -->
+    <div class="panel">
+      <div class="panel-title">Prediction Result</div>
+      <div class="result-main">
+        <div class="result-label">Admission Probability</div>
+        <div class="result-prob" id="prob-display">--</div>
+        <div class="result-verdict" id="verdict">Loading…</div>
+        <div class="prob-bar-bg"><div class="prob-bar-fill" id="prob-bar" style="width:0"></div></div>
+        <div class="prob-bar-ticks"><span>0%</span><span>▲ 50% threshold</span><span>100%</span></div>
+      </div>
+      <div class="factor-section-label">Feature Contributions</div>
+      <div class="factor-list" id="factor-list"></div>
+      <div class="advice-box" id="advice-box"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ANALYTICS
+══════════════════════════════════════════ -->
+<div class="section" id="section-analytics">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h2>Analytics Dashboard</h2>
+      <p>Model performance metrics with interactive filters. Data served from Flask + sklearn.</p>
+    </div>
+  </div>
+  <div class="dash-wrap">
+    <!-- Filter chips -->
+    <div class="dash-filters">
+      <span class="dash-filter-label">View:</span>
+      <button class="filter-chip active" data-filter="all">All Metrics</button>
+      <button class="filter-chip" data-filter="performance">Performance</button>
+      <button class="filter-chip" data-filter="features">Feature Analysis</button>
+      <button class="filter-chip" data-filter="distribution">Distribution</button>
+    </div>
+
+    <!-- KPI bar — values injected by Flask -->
+    <div class="kpi-bar">
+      <div class="kpi-card c-green">
+        <div class="kpi-card-val">{{ metrics.accuracy }}%</div>
+        <div class="kpi-card-lbl">Accuracy</div>
+        <div class="kpi-card-sub">{{ metrics.confusion_matrix[0][0] + metrics.confusion_matrix[1][1] }}/{{ metrics.confusion_matrix | sum(attribute=0) + metrics.confusion_matrix | sum(attribute=1) }} correct</div>
+      </div>
+      <div class="kpi-card c-blue">
+        <div class="kpi-card-val">{{ metrics.auc }}</div>
+        <div class="kpi-card-lbl">AUC Score</div>
+        <div class="kpi-card-sub">Excellent discrimination</div>
+      </div>
+      <div class="kpi-card c-amber">
+        <div class="kpi-card-val">{{ metrics.precision }}%</div>
+        <div class="kpi-card-lbl">Precision</div>
+        <div class="kpi-card-sub">{{ metrics.confusion_matrix[1][1] }}/({{ metrics.confusion_matrix[1][1] }}+{{ metrics.confusion_matrix[0][1] }}) true admits</div>
+      </div>
+      <div class="kpi-card c-red">
+        <div class="kpi-card-val">{{ metrics.recall }}%</div>
+        <div class="kpi-card-lbl">Recall</div>
+        <div class="kpi-card-sub">F1 = {{ metrics.f1 }}%</div>
+      </div>
+    </div>
+
+    <!-- Performance charts -->
+    <div class="dash-main-grid filter-group-performance filter-group-all">
+      <div class="chart-card">
+        <div class="chart-card-hd">
+          <div><div class="chart-card-title">ROC Curve</div><div class="chart-card-sub">Receiver Operating Characteristic — model vs random classifier</div></div>
+          <span class="chart-badge green">AUC {{ metrics.auc }}</span>
+        </div>
+        <canvas id="roc-chart" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-hd">
+          <div><div class="chart-card-title">Confusion Matrix</div><div class="chart-card-sub">Test set predictions (n=125)</div></div>
+          <span class="chart-badge blue">{{ metrics.accuracy }}% ACC</span>
+        </div>
+        <canvas id="cm-chart" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- Feature charts -->
+    <div class="dash-side-grid filter-group-features filter-group-all">
+      <div class="chart-card">
+        <div class="chart-card-hd"><div><div class="chart-card-title">Feature Coefficients</div><div class="chart-card-sub">Logistic Regression model weights</div></div></div>
+        <canvas id="coef-chart" height="220"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-hd"><div><div class="chart-card-title">CGPA vs GRE by Admission</div><div class="chart-card-sub">Mean values by outcome</div></div></div>
+        <canvas id="compare-chart" height="220"></canvas>
+      </div>
+    </div>
+
+    <!-- Distribution charts -->
+    <div class="dash-side-grid filter-group-distribution filter-group-all">
+      <div class="chart-card">
+        <div class="chart-card-hd"><div><div class="chart-card-title">Class Distribution</div><div class="chart-card-sub">Admitted vs Not Admitted (500 records)</div></div></div>
+        <canvas id="dist-chart" height="220"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-hd"><div><div class="chart-card-title">Research Impact</div><div class="chart-card-sub">Admission rate by research experience</div></div></div>
+        <canvas id="research-chart" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CODE VIEWER
+══════════════════════════════════════════ -->
+<div class="section" id="section-code">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h2>Jupyter Notebook Viewer</h2>
+      <p>Browse the actual capstone notebook code — click any cell to expand.</p>
+    </div>
+  </div>
+  <div class="code-wrap">
+    <div class="code-nav">
+      <button class="code-tab active" data-ctab="all">All Cells</button>
+      <button class="code-tab" data-ctab="code">Code Only</button>
+      <button class="code-tab" data-ctab="md">Markdown Only</button>
+    </div>
+    <div class="notebook" id="notebook"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     DATASET
+══════════════════════════════════════════ -->
+<div class="section" id="section-data">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h2>Dataset Explorer</h2>
+      <p>500 student records — served from Flask API with server-side filtering &amp; pagination.</p>
+    </div>
+  </div>
+  <div class="data-wrap">
+    <div class="table-controls">
+      <input class="search-input" type="text" placeholder="Search values…" id="search-input">
+      <select class="filter-select" id="admit-filter">
+        <option value="">All Students</option>
+        <option value="1">Admitted</option>
+        <option value="0">Not Admitted</option>
+      </select>
+      <select class="filter-select" id="res-filter">
+        <option value="">All Research</option>
+        <option value="1">Has Research</option>
+        <option value="0">No Research</option>
+      </select>
+      <span style="font-size:.72rem;color:var(--muted);font-weight:500;" id="row-count"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>GRE</th><th>TOEFL</th><th>Univ.</th>
+            <th>SOP</th><th>LOR</th><th>CGPA</th><th>Research</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="data-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ABOUT
+══════════════════════════════════════════ -->
+<div class="section" id="section-about">
+  <div class="about-wrap">
+    <div class="about-section">
+      <h2>📋 Project Overview</h2>
+      <p><strong>Institution:</strong> Jaypee Institute of Information Technology, Noida &nbsp;|&nbsp; <strong>Program:</strong> AI &amp; Data Analytics</p>
+      <p><strong>Student:</strong> Saanvi Grover &nbsp;·&nbsp; Roll No. 2408030010</p>
+      <p>Binary classification model to predict graduate program admission using Logistic Regression on the Kaggle Graduate Admission dataset (500 records, 7 features).</p>
+    </div>
+    <div class="about-section">
+      <h2>🔬 Methodology</h2>
+      <ul>
+        <li>Cleaned 500 records — no nulls or duplicates found</li>
+        <li>Binarized target: Chance of Admit ≥ 0.75 → Admitted (1)</li>
+        <li>EDA: histograms, boxplots, correlation heatmap, pairplot</li>
+        <li>75% train / 25% test split (stratified by label)</li>
+        <li>Logistic Regression (sklearn, max_iter=2000)</li>
+        <li>Compared vs Decision Tree and KNN — both underperformed</li>
+      </ul>
+    </div>
+    <div class="about-section">
+      <h2>⚖️ Model Coefficients</h2>
+      <table class="coef-table">
+        <thead><tr><th>Feature</th><th>Coefficient</th><th style="width:40%">Relative Impact</th></tr></thead>
+        <tbody>
+          {% for feat, val in coef_items %}
+          <tr>
+            <td>{{ feat.replace('_', ' ') }}</td>
+            <td class="tag-pos">+{{ val }}</td>
+            <td><div class="coef-bar" style="width:{{ ((val / max_coef) * 100) | round | int }}%"></div></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="about-section">
+      <h2>🔮 Future Enhancements</h2>
+      <ul>
+        <li>Larger dataset across multiple universities and countries</li>
+        <li>Ensemble models: Random Forest, XGBoost comparison</li>
+        <li>SHAP values for per-prediction explainability</li>
+        <li>Production deployment (Gunicorn + Nginx + Docker)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
