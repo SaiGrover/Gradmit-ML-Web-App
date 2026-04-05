@@ -1,9 +1,60 @@
-# GradAdmit — Graduate Admission Predictor
+# GradMit — Graduate Admission Predictor
 
-**Capstone Project · JIIT Noida · AI & Data Analytics**  
-Student: Saanvi Grover | Roll No. 2408030010
+Full-stack machine learning web application that predicts graduate admission probability using Logistic Regression, achieving high predictive performance (91.2% accuracy, AUC 0.975).
 
-A full-stack Flask web application that predicts graduate school admission chances using Logistic Regression (91.2% accuracy, AUC 0.975).
+Student: Saanvi Grover
+Institute: JIIT Noida
+Domain: Data Analytics & Machine Learning
+
+---
+
+## Overview
+
+GradMit helps students estimate their chances of admission based on academic and profile features like GRE, TOEFL, CGPA, SOP, LOR, and Research experience.
+
+The system combines data preprocessing, model training, and an interactive Flask-based web interface to deliver real-time predictions and insights.
+
+---
+
+## Key Features
+
+* Real-time admission prediction using trained ML model
+* Interactive dashboard with 6+ visualizations (ROC, Confusion Matrix, Feature Importance, etc.)
+* Dataset explorer with filtering, search, and pagination
+* Contribution analysis showing feature impact on predictions
+* Clean and responsive UI using Flask, HTML, CSS, and JavaScript
+
+---
+
+## Tech Stack
+
+* Python
+* Flask
+* Pandas, NumPy
+* Scikit-learn
+* Matplotlib, Seaborn
+* Chart.js (frontend visualization)
+
+---
+
+## Model Performance
+
+* Algorithm: Logistic Regression
+* Accuracy: 91.2%
+* Precision: 92.2%
+* Recall: 87.0%
+* F1 Score: 89.5%
+* AUC Score: 0.975
+
+Key Insight: CGPA and Research experience are the strongest predictors of admission probability.
+
+---
+
+## Dataset
+
+* Source: Kaggle – Graduate Admission Dataset
+* Size: 500 records
+* Target: Admission (binary classification based on probability threshold)
 
 ---
 
@@ -11,136 +62,64 @@ A full-stack Flask web application that predicts graduate school admission chanc
 
 ```
 gradmit/
-├── app.py                    # Flask application — routes, model training, APIs
-├── Admission_Predict.csv     # Dataset (500 records from Kaggle)
-├── requirements.txt          # Python dependencies
-├── README.md
-│
-├── templates/
-│   └── index.html            # Jinja2 HTML template (single-page app)
-│
-└── static/
-    ├── css/
-    │   └── style.css         # All styling — dark theme, dashboard, responsive
-    └── js/
-        └── main.js           # Navigation, API calls, Chart.js, code viewer, table
+│── app.py
+│── data/
+│   └── Admission_Predict.csv
+│── templates/
+│── static/
+│── requirements.txt
+│── README.md
 ```
-
 ---
 
-## Quick Start
+## How to Run
 
-### 1. Install dependencies
+1. Clone the repository
 
-```bash
-# Create a virtual environment (recommended)
-python -m venv venv
+2. Install dependencies
+   pip install -r requirements.txt
 
-# Activate it
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
+3. Run the application
+   python app.py
 
-# Install packages
-pip install -r requirements.txt
-```
-
-### 2. Run the app
-
-```bash
-python app.py
-```
-
-Then open **http://localhost:5000** in your browser.
+4. Open in browser
+   http://localhost:5000
 
 ---
 
 ## API Endpoints
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| `GET`  | `/`   | Main web app (renders index.html) |
-| `POST` | `/api/predict` | Returns admission probability from form values |
-| `GET`  | `/api/dataset` | Paginated, filtered dataset records |
-| `GET`  | `/api/metrics` | Model performance metrics (accuracy, AUC, etc.) |
-
-### POST `/api/predict` — example
-
-**Request body (JSON):**
-```json
-{
-  "gre": 320,
-  "toefl": 110,
-  "university_rating": 3,
-  "sop": 4.0,
-  "lor": 4.0,
-  "cgpa": 8.9,
-  "research": 1
-}
-```
-
-**Response:**
-```json
-{
-  "probability": 83.4,
-  "admitted": true,
-  "contributions": {
-    "GRE_Score": 24.13,
-    "TOEFL_Score": 14.89,
-    ...
-  },
-  "tips": ["Strong profile! Maintain your academic record."]
-}
-```
+POST /api/predict → Returns admission probability
+GET /api/dataset → Returns dataset with filters
+GET /api/metrics → Returns model performance
 
 ---
 
-## Features
+## Results & Impact
 
-- **Live Predictor** — Sliders send real-time POST requests to Flask; probability updates instantly
-- **Analytics Dashboard** — 6 Chart.js charts (ROC, Confusion Matrix, Coefficients, Distribution, CGPA/GRE comparison, Research impact) with filter chips
-- **Jupyter Code Viewer** — All notebook cells viewable with syntax highlighting; filter by Code / Markdown
-- **Dataset Explorer** — Server-side search, filter (admission status, research), pagination
-- **About** — Coefficients table, methodology, future enhancements
-
----
-
-## Model Details
-
-| Metric | Value |
-|--------|-------|
-| Algorithm | Logistic Regression |
-| Train/Test Split | 75% / 25% (stratified) |
-| Accuracy | 91.2% |
-| Precision | 92.2% |
-| Recall | 87.0% |
-| F1 Score | 89.5% |
-| AUC | 0.975 |
-
-**Top predictors (by coefficient):**
-1. CGPA (+2.4237)
-2. Research (+0.5144)
-3. SOP (+0.4690)
-4. LOR (+0.3529)
-5. University Rating (+0.2340)
+* Built an end-to-end ML pipeline from data preprocessing to deployment
+* Achieved 91%+ prediction accuracy on unseen data
+* Enabled real-time decision support for students applying to graduate programs
+* Improved interpretability using feature contribution analysis
 
 ---
 
-## Production Deployment
+## Future Improvements
 
-```bash
-# Using Gunicorn (Linux/macOS)
-pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
-```
-
-For Docker, Nginx, or cloud deployment (Render, Railway, Heroku) — see Flask deployment docs.
+* Deploy application using cloud platforms (Render / Railway)
+* Add multiple ML models for comparison (Random Forest, XGBoost)
+* Improve UI/UX with advanced dashboards
+* Integrate user login and history tracking
 
 ---
 
-## Dataset
+## Screenshots
 
-**Source:** [Kaggle — Graduate Admission Prediction](https://www.kaggle.com/datasets/mohansacharya/graduate-admissions)  
-**Records:** 500 student profiles  
-**Target:** Chance of Admit ≥ 0.75 → Admitted (binary)
+(Updating soon)
+
+---
+
+## Author
+
+Saanvi Grover
+(AI & Data Analytics)
