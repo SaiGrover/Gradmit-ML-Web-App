@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 # ─── Load & Train Model on Startup ──────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = os.path.join(BASE_DIR, "Admission_Predict.csv")
+DATA_PATH = os.path.join(BASE_DIR,"data", "Admission_Predict.csv")
 
 df = pd.read_csv(DATA_PATH)
 df.columns = df.columns.str.strip().str.replace(" ", "_")
