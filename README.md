@@ -8,6 +8,26 @@ Domain: Data Analytics & Machine Learning
 
 ---
 
+## Screenshots
+<img width="1920" height="1140" alt="Screenshot 2026-04-05 185322" src="https://github.com/user-attachments/assets/64d2c706-7a6f-4f2b-a25b-a3c695323d02" />
+
+<img width="1920" height="1140" alt="Screenshot 2026-04-05 185338" src="https://github.com/user-attachments/assets/041115fe-8d8f-4d00-a56f-132254a31b37" />
+
+<img width="1920" height="1140" alt="Screenshot 2026-04-05 185359" src="https://github.com/user-attachments/assets/f83a8177-3742-499a-aa9b-4fb691e79caf" />
+
+<img width="1920" height="1140" alt="Screenshot 2026-04-05 185407" src="https://github.com/user-attachments/assets/f7e7bac1-d19e-4f3f-b3b1-68004e72e3c3" />
+
+<img width="1920" height="1140" alt="Screenshot 2026-04-05 185430" src="https://github.com/user-attachments/assets/bbf094fa-5882-41f5-923a-82a10e8d1f18" />
+
+<img width="1920" height="1140" alt="Screenshot 2026-04-05 185416" src="https://github.com/user-attachments/assets/60cb131d-e22c-48cf-911d-a15a0f342c77" />
+
+<img width="1920" height="1140" alt="Screenshot 2026-04-05 185445" src="https://github.com/user-attachments/assets/6d8f0744-9107-4b68-ac8f-ad30755fe24d" />
+
+
+
+---
+
+
 ## Overview
 
 GradMit helps students estimate their chances of admission based on academic and profile features like GRE, TOEFL, CGPA, SOP, LOR, and Research experience.
@@ -112,12 +132,6 @@ GET /api/metrics → Returns model performance
 * Add multiple ML models for comparison (Random Forest, XGBoost)
 * Improve UI/UX with advanced dashboards
 * Integrate user login and history tracking
-
----
-
-## Screenshots
-
-(Updating soon)
 
 ---
 
