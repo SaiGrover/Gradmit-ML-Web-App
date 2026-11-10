@@ -63,14 +63,22 @@ with left:
     ui.chart(
         charts.fold_distribution(folds, metric, selected, order),
         alt=f"{charts.METRIC_LABELS[metric]} on each of the 50 validation folds, per model",
+        title="Score on every validation fold",
+        sub="each dot is one fold; every model sees the same 50 folds",
+        what="The spread of the chosen metric across the 50 validation folds, one row per model.",
+        why=("Single-split results hide this spread. Fold-to-fold variation is as large as the gaps "
+             "between models, which is why intervals and paired tests come before any ranking."),
     )
-    st.caption("Each dot is one validation fold. Every model sees the same 50 folds.")
 with right:
     ui.chart(
         charts.interval_chart(comparison, metric, selected),
         alt=f"Mean {charts.METRIC_LABELS[metric]} with 95% confidence interval, per model",
+        title="Mean and 95% interval",
+        sub=protocol["confidence_interval"],
+        what="The mean of the 50 fold scores for each model, with a 95% interval on that mean.",
+        why=("Repeated folds share training rows, so a naive interval would be too narrow. The corrected "
+             "interval is wider and more honest about how well the mean is known."),
     )
-    st.caption(f"{protocol['confidence_interval']}.")
 
 st.subheader(f"Paired tests: {selected} against each baseline", icon=":material/balance:")
 tests_col, forest_col = st.columns([7, 5], gap="large")
@@ -99,7 +107,14 @@ with tests_col:
         "when the interval excludes zero and the Holm-corrected p-value is below 0.05."
     )
 with forest_col:
-    ui.chart(charts.paired_forest(paired), alt="Paired differences in balanced accuracy with 95% confidence intervals")
+    ui.chart(
+        charts.paired_forest(paired),
+        alt="Paired differences in balanced accuracy with 95% confidence intervals",
+        title="Model minus baseline",
+        sub="paired bootstrap 95% interval",
+        what="How much higher the selected model's balanced accuracy is than each baseline, on the same records.",
+        why="An interval that crosses the dotted zero line means the data cannot tell the two apart.",
+    )
 
 st.subheader(f"Cross-fitted diagnostics for {selected}", icon=":material/stethoscope:")
 st.markdown(
@@ -110,18 +125,36 @@ rows = oof_for(ui.output("oof"), threshold, selected)
 cm = block["cross_fitted"]["confusion_matrix"]
 a, b = st.columns(2, gap="large")
 with a:
-    st.markdown("**Confusion matrix**")
-    ui.chart(charts.confusion_chart(cm), alt="Cross-fitted confusion matrix")
+    ui.chart(
+        charts.confusion_chart(cm), alt="Cross-fitted confusion matrix", title="Confusion matrix",
+        sub="one cross-fitted prediction per record",
+        what="How the cross-fitted predictions split into correct and incorrect calls for each class.",
+        why="It shows which kind of mistake the model makes more often, which a single accuracy number hides.",
+    )
 with b:
-    st.markdown("**Calibration**")
-    ui.chart(charts.calibration_chart(rows["y_true"], rows["mean_oof_prob"]), alt="Calibration curve of cross-fitted probabilities")
+    ui.chart(
+        charts.calibration_chart(rows["y_true"], rows["mean_oof_prob"]),
+        alt="Calibration curve of cross-fitted probabilities", title="Calibration",
+        sub="predicted probability against observed share",
+        what="Records grouped by predicted probability, against the share of each group that is proxy-positive.",
+        why=("The predictor shows a probability, so it should mean what it says. Points near the diagonal "
+             "are well calibrated; no extra calibration step is applied."),
+    )
 c, d = st.columns(2, gap="large")
 with c:
-    st.markdown("**ROC curve**")
-    ui.chart(charts.roc_chart(rows["y_true"], rows["mean_oof_prob"]), alt="Cross-fitted ROC curve")
+    ui.chart(
+        charts.roc_chart(rows["y_true"], rows["mean_oof_prob"]), alt="Cross-fitted ROC curve",
+        title="ROC curve", sub="every possible decision threshold",
+        what="True positive rate against false positive rate as the decision threshold moves from 1 to 0.",
+        why="It judges how well records are ranked, independently of the 0.50 threshold the app uses.",
+    )
 with d:
-    st.markdown("**Precision-recall curve**")
-    ui.chart(charts.pr_chart(rows["y_true"], rows["mean_oof_prob"]), alt="Cross-fitted precision-recall curve")
+    ui.chart(
+        charts.pr_chart(rows["y_true"], rows["mean_oof_prob"]), alt="Cross-fitted precision-recall curve",
+        title="Precision-recall curve", sub="dotted line is the share of proxy-positive records",
+        what="Precision against recall across all decision thresholds.",
+        why="With unequal classes this is a stricter view than ROC: its floor is the prevalence, not 0.5.",
+    )
 
 st.subheader("Error analysis", icon=":material/error_med:")
 errors = error_frame(ui.dataset(), ui.output("oof"), threshold, selected)

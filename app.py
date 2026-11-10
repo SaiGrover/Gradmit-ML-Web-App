@@ -11,6 +11,9 @@ from pathlib import Path
 
 import streamlit as st
 
+from gradmit import style, ui
+from gradmit.data import DEFAULT_TARGET_THRESHOLD
+
 ROOT = Path(__file__).resolve().parent
 
 st.set_page_config(
@@ -19,40 +22,46 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
-st.logo(str(ROOT / "assets" / "gradmit-logo.svg"), size="large")
+style.inject_css()
 
-PAGES = {
-    "": [
-        st.Page("app_pages/problem.py", title="Problem statement", icon=":material/assignment:", default=True),
-        st.Page("app_pages/overview.py", title="Overview", icon=":material/home:"),
-    ],
-    "Results": [
-        st.Page("app_pages/evaluation.py", title="Model evaluation", icon=":material/monitoring:"),
-        st.Page("app_pages/baselines.py", title="Baselines", icon=":material/straighten:"),
-        st.Page("app_pages/sensitivity.py", title="Threshold sensitivity", icon=":material/tune:"),
-    ],
-    "Explore": [
-        st.Page("app_pages/predictor.py", title="Profile predictor", icon=":material/person_search:"),
-        st.Page("app_pages/explorer.py", title="Data explorer", icon=":material/table_chart:"),
-    ],
-    "About": [
-        st.Page("app_pages/methodology.py", title="Methodology", icon=":material/menu_book:"),
-    ],
-}
+evaluation = ui.evaluation()
+block = evaluation["thresholds"][f"{DEFAULT_TARGET_THRESHOLD:.2f}"]
+model_ba = block["selected_model_cv"]["balanced_accuracy"]["mean"]
+cgpa_ba = block["cgpa_cutoff_baseline_cv"]["balanced_accuracy"]["mean"]
+thresholds = " / ".join(f"{t:.2f}" for t in evaluation["target"]["target_thresholds"])
 
-page = st.navigation(PAGES, position="top")
+# The project pipeline doubles as the navigation: every node is a real page.
+# (file, title, tag, short metric read from the committed outputs, colour)
+NODES = [
+    ("home", "Project", "Start here", f"{evaluation['data']['n_rows']} profiles", style.MINT),
+    ("problem", "Problem statement", "01 · Question", "a proxy label", style.SKY),
+    ("explorer", "Data explorer", "02 · Data", f"{len(evaluation['data']['features'])} features", style.SKY),
+    ("evaluation", "Model evaluation", "03 · Models", f"{model_ba:.3f} balanced acc.", style.MINT),
+    ("baselines", "Baselines", "04 · Baselines", f"CGPA rule {cgpa_ba:.3f}", style.GOLD),
+    ("sensitivity", "Threshold sensitivity", "05 · Thresholds", thresholds, style.LILAC),
+    ("predictor", "Profile predictor", "06 · Try it", "live estimate", style.MINT),
+    ("methodology", "Methodology", "Notes", "limits, stated plainly", style.SLATE),
+]
+PAGES = [
+    st.Page(f"app_pages/{name}.py", title=title, default=name == "home")
+    for name, title, *_ in NODES
+]
+page = st.navigation(PAGES, position="hidden")
+active = next(i for i, p in enumerate(PAGES) if p.title == page.title)
+
+style.topbar()
+st.html(style.rail_css([n[4] for n in NODES], active))
+with st.container(key="navrail"):
+    widths = []
+    for i in range(len(NODES)):
+        widths += [5, 0.55] if i < len(NODES) - 1 else [5]
+    slots = st.columns(widths, gap="small", vertical_alignment="center")
+    for i, (_name, title, tag, metric, _) in enumerate(NODES):
+        with slots[i * 2]:
+            if st.button(f"{tag}  \n**{title}**  \n*{metric}*", key=f"nav{i}", width="stretch"):
+                st.switch_page(PAGES[i])
+        if i < len(NODES) - 1:
+            slots[i * 2 + 1].html('<div class="flowarrow">&#10230;</div>')
+
 page.run()
-
-st.space("large")
-with st.container(border=True):
-    st.caption(
-        "GradMit estimates a proxy label derived from the dataset's own Chance of Admit score. "
-        "It does not predict real admission decisions. Built by Saanvi Grover, JIIT Noida."
-    )
-    with st.container(horizontal=True, gap="medium"):
-        st.page_link("app_pages/methodology.py", label="Methodology", icon=":material/menu_book:")
-        st.page_link(
-            "https://github.com/SaiGrover/Gradmit-ML-Web-App",
-            label="Source on GitHub",
-            icon=":material/code:",
-        )
+style.footer()

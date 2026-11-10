@@ -44,15 +44,25 @@ else:
 
 left, right = st.columns(2, gap="large")
 with left:
-    st.subheader("Balanced accuracy across thresholds")
-    ui.chart(charts.sensitivity_chart(sensitivity, selected),
-             alt="Balanced accuracy of the majority baseline, CGPA cutoff and selected model at each target threshold")
+    ui.chart(
+        charts.sensitivity_chart(sensitivity, selected),
+        alt="Balanced accuracy of the majority baseline, CGPA cutoff and selected model at each target threshold",
+        title="Balanced accuracy across thresholds", sub="mean of 50 folds at each threshold",
+        what="The selected model, the CGPA cutoff and the majority rule, scored at each of the three thresholds.",
+        why=("Where the label is cut is a choice, not a fact. If a conclusion flips between thresholds, it "
+             "depends on that choice and should be reported that way."),
+    )
 with right:
-    st.subheader("Class balance across thresholds")
-    ui.chart(charts.class_balance_chart(sensitivity),
-             alt="Share of proxy-positive and proxy-negative records at each target threshold")
+    ui.chart(
+        charts.class_balance_chart(sensitivity),
+        alt="Share of proxy-positive and proxy-negative records at each target threshold",
+        title="Class balance across thresholds", sub="share of the 500 records on each side of the cut",
+        what="How many records count as proxy-positive at each threshold.",
+        why=("A higher threshold makes positives rarer, which flatters plain accuracy for the majority rule. "
+             "That is why balanced accuracy is the primary metric."),
+    )
 
-st.subheader("All three thresholds")
+st.subheader("All three thresholds", icon=":material/table:")
 table = pd.DataFrame(
     {
         "Threshold": sensitivity["target_threshold"].map("{:.2f}".format),

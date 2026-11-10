@@ -32,11 +32,11 @@ treated the proxy label as a real outcome.
 
 ## Screenshots
 
-| Overview | Profile predictor |
+| Overview (earlier design) | Profile predictor (earlier design) |
 |---|---|
 | ![Overview page](docs/screenshots/overview.jpg) | ![Profile predictor page](docs/screenshots/predictor.jpg) |
 
-| Model evaluation | Data explorer |
+| Model evaluation (earlier design) | Data explorer (earlier design) |
 |---|---|
 | ![Model evaluation page](docs/screenshots/evaluation.jpg) | ![Data explorer page with the Research chart](docs/screenshots/explorer.jpg) |
 
@@ -60,9 +60,11 @@ streamlit run app.py
 The app loads the committed pipeline in `artifacts/` and the committed results in `outputs/`. It
 never trains or evaluates a model at start-up.
 
-App pages, grouped in the top navigation: Problem statement (the landing page) and Overview;
-Results (Model evaluation, Baselines, Threshold sensitivity); Explore (Profile predictor, Data
-explorer); About (Methodology).
+The app opens on a project home page (what GradMit is, what is inside, the headline finding and how
+it was built). A pipeline rail under the header is the navigation: Problem statement, Data explorer,
+Model evaluation, Baselines, Threshold sensitivity, Profile predictor and Methodology. Every chart
+sits in a card with a short "what this shows / why it matters" note. The visual system lives in
+`gradmit/style.py` and follows the team's Data Vortex Round 4 dashboard.
 
 ## Reproduce the evaluation
 
@@ -226,7 +228,7 @@ saved pipeline against a fresh fit.
 
 ```text
 app.py                      Streamlit entry point (navigation only)
-app_pages/                  One script per app page
+app_pages/                  One script per app page (home.py is the landing page)
 assets/                     Logo and icon used by the app header and browser tab
 gradmit/
 ├── data.py                 Loading, schema, proxy-target construction, input validation
@@ -236,6 +238,7 @@ gradmit/
 ├── statistics.py           Wilson intervals, paired bootstrap/permutation, Holm
 ├── reporting.py            Builds and loads the files in outputs/
 ├── verification.py         Reproducibility checks used by CI and tests
+├── style.py                Palette, page CSS and layout blocks for the app
 ├── charts.py               Plotly figures for the app
 └── ui.py                   Cached loaders and shared widgets for the app
 scripts/

@@ -21,6 +21,7 @@ from .data import (
     load_data,
 )
 from .reporting import OUTPUT_FILES
+from .style import card
 
 PLOT_CONFIG = {"displayModeBar": False, "responsive": True}
 
@@ -80,8 +81,16 @@ def page_header(title: str, *, icon: str, lede: str | None = None) -> None:
         st.markdown(lede)
 
 
-def chart(fig, alt: str) -> None:
-    st.plotly_chart(fig, config=PLOT_CONFIG, alt=alt)
+def chart(fig, alt: str, what: str | None = None, why: str | None = None,
+          title: str | None = None, sub: str | None = None) -> None:
+    """A Plotly chart in its own card, optionally followed by an Interpretation note."""
+    with card(title, sub):
+        st.plotly_chart(fig, config=PLOT_CONFIG, alt=alt)
+        if what:
+            with st.expander("Interpretation", icon=":material/lightbulb:"):
+                st.markdown(f"**What this shows.** {what}")
+                if why:
+                    st.markdown(f"**Why it matters.** {why}")
 
 
 def pct(value: float, digits: int = 1) -> str:

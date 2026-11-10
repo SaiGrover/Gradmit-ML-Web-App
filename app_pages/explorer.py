@@ -27,6 +27,10 @@ with chart_col:
     ui.chart(
         charts.research_chart(research),
         alt="Share of records above the Chance-of-Admit threshold, for records with and without research experience",
+        title="Share above the threshold, by research experience", sub="Wilson 95% intervals",
+        what="Of the records in each group, the share whose estimated Chance of Admit is at or above the threshold.",
+        why=("The first version of this chart had the groups the wrong way round. This one reads straight from "
+             "the committed table, and a test checks the direction."),
     )
 with text_col:
     st.markdown(
@@ -51,15 +55,18 @@ with left:
     ui.chart(
         charts.feature_histogram(df, feature, target, FEATURE_LABELS[feature]),
         alt=f"Distribution of {FEATURE_LABELS[feature]} for proxy-positive and proxy-negative records",
+        title=f"{FEATURE_LABELS[feature]} by label", sub="proxy-positive in mint, proxy-negative in gold",
+        what=f"The distribution of {FEATURE_LABELS[feature]} for records on each side of the threshold.",
+        why="The less the two shapes overlap, the more this one feature separates the label on its own.",
     )
 with right:
     ui.chart(
         charts.correlation_chart(df[FEATURES + [SCORE_COLUMN]].corr(), SHORT_LABELS),
         alt="Pearson correlation between every pair of features and Chance of Admit",
-    )
-    st.caption(
-        "The features are strongly correlated with one another, so no single one can be credited "
-        "with the score. Correlation here describes this sample only."
+        title="How the features move together", sub="Pearson correlation, this sample only",
+        what="The correlation between every pair of features and the Chance of Admit score.",
+        why=("The features are strongly correlated with one another, so no single one can be credited with "
+             "the score, and a CGPA-only rule can come close to the full model."),
     )
 
 st.subheader("Records", icon=":material/table_rows:")

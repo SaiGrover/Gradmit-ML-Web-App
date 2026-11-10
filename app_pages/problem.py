@@ -161,4 +161,4 @@ with st.container(horizontal=True):
     )
     st.metric("Target thresholds studied", joined(thresholds), border=True)
 
-st.page_link("app_pages/overview.py", label="Continue to the headline result", icon=":material/arrow_forward:")
+st.page_link("app_pages/home.py", label="Back to the project and its headline result", icon=":material/arrow_forward:")

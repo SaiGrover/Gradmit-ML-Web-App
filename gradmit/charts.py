@@ -13,15 +13,16 @@ from sklearn.calibration import calibration_curve
 from sklearn.metrics import precision_recall_curve, roc_curve
 
 from .baselines import BASELINES
+from .style import CORAL, GOLD, GRID, MINT, MINT_SOFT, MUT, PANEL_2, SLATE, TXT
 
-INK = "#14282E"
-TEAL = "#0B6E69"
-TEAL_SOFT = "#8FC1BC"
-OCHRE = "#B7791F"
-BRICK = "#B4452F"
-SLATE = "#6B7C80"
-GRID = "#DDE5E2"
-FONT = "IBM Plex Sans, system-ui, sans-serif"
+# Colour carries one meaning on every page: mint for the selected model, slate for
+# other models, gold for baselines and coral for errors.
+INK = TXT
+TEAL = MINT
+TEAL_SOFT = MINT_SOFT
+OCHRE = GOLD
+BRICK = CORAL
+FONT = "Inter, system-ui, sans-serif"
 
 METRIC_LABELS = {
     "accuracy": "Accuracy",
@@ -38,15 +39,17 @@ def _layout(fig: go.Figure, height: int = 360, **kwargs) -> go.Figure:
     fig.update_layout(
         height=height,
         margin=dict(l=8, r=16, t=28, b=8),
-        font=dict(family=FONT, size=13, color=INK),
+        font=dict(family=FONT, size=13, color=MUT),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        hoverlabel=dict(font=dict(family=FONT, size=13)),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+        hoverlabel=dict(font=dict(family=FONT, size=13, color=TXT), bgcolor=PANEL_2, bordercolor=GRID),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(color=MUT)),
         **kwargs,
     )
-    fig.update_xaxes(gridcolor=GRID, zeroline=False, automargin=True)
-    fig.update_yaxes(gridcolor=GRID, zeroline=False, automargin=True)
+    axis = dict(gridcolor=GRID, linecolor=GRID, zeroline=False, automargin=True,
+                tickfont=dict(color=MUT), title_font=dict(color=MUT))
+    fig.update_xaxes(**axis)
+    fig.update_yaxes(**axis)
     return fig
 
 
@@ -140,7 +143,7 @@ def paired_forest(paired: pd.DataFrame) -> go.Figure:
             )
         )
     fig.add_vline(x=0, line=dict(color=INK, width=1, dash="dot"))
-    fig.update_xaxes(title="Difference in balanced accuracy (model minus baseline)")
+    fig.update_xaxes(title="Model minus baseline, balanced accuracy")
     return _layout(fig, height=190)
 
 
@@ -191,7 +194,7 @@ def class_balance_chart(sensitivity: pd.DataFrame) -> go.Figure:
         text=[f"{p:.1f}%" for p in pos], textposition="inside",
     )
     fig.add_bar(
-        x=labels, y=100 - pos, name="Proxy-negative", marker_color=GRID,
+        x=labels, y=100 - pos, name="Proxy-negative", marker_color="rgba(186,214,220,.16)",
         text=[f"{100 - p:.1f}%" for p in pos], textposition="inside",
     )
     fig.update_layout(barmode="stack")
@@ -244,8 +247,8 @@ def confusion_chart(cm: dict) -> go.Figure:
             y=["Proxy-negative", "Proxy-positive"],
             text=text,
             texttemplate="%{text}",
-            textfont=dict(size=14),
-            colorscale=[[0, "#EEF2F0"], [1, TEAL]],
+            textfont=dict(size=14, color=TXT),
+            colorscale=[[0, PANEL_2], [1, TEAL]],
             showscale=False,
             hoverinfo="skip",
         )
@@ -338,10 +341,10 @@ def correlation_chart(corr: pd.DataFrame, labels: dict) -> go.Figure:
             y=names,
             zmin=-1,
             zmax=1,
-            colorscale=[[0, OCHRE], [0.5, "#F6F8F7"], [1, TEAL]],
+            colorscale=[[0, OCHRE], [0.5, PANEL_2], [1, TEAL]],
             text=corr.round(2).to_numpy(),
             texttemplate="%{text}",
-            textfont=dict(size=11),
+            textfont=dict(size=11, color=TXT),
             colorbar=dict(title="r", thickness=10),
             hovertemplate="%{y} and %{x}<br>Pearson r = %{z:.2f}<extra></extra>",
         )

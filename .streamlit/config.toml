@@ -1,40 +1,40 @@
+# Graphite and mint, pinned so the app renders the same everywhere. Matches gradmit/style.py.
 [theme]
-base = "light"
-primaryColor = "#0B6E69"
-backgroundColor = "#FAFBFA"
-secondaryBackgroundColor = "#EEF3F1"
-textColor = "#14282E"
-linkColor = "#0B6E69"
-borderColor = "#D5DEDB"
-codeBackgroundColor = "#EEF3F1"
+base = "dark"
+primaryColor = "#5EC4B0"
+backgroundColor = "#0C1316"
+secondaryBackgroundColor = "#141E22"
+textColor = "#EEF3F4"
+linkColor = "#5EC4B0"
+borderColor = "rgba(186,214,220,0.18)"
+codeBackgroundColor = "#141E22"
 
-# Palette used by badges, callouts and colored markdown, tuned to the chart colours.
-blueColor = "#2A6F97"
-greenColor = "#0B6E69"
-orangeColor = "#B7791F"
-redColor = "#B4452F"
-grayColor = "#6B7C80"
-violetColor = "#6A5C8E"
+blueColor = "#6FA8DC"
+greenColor = "#5EC4B0"
+orangeColor = "#E2B45A"
+redColor = "#E07A5F"
+grayColor = "#8B9BA3"
+violetColor = "#A99BE0"
 
-dataframeBorderColor = "#D5DEDB"
-dataframeHeaderBackgroundColor = "#E4ECE9"
-dataframeHeaderTextColor = "#14282E"
+dataframeBorderColor = "rgba(186,214,220,0.15)"
+dataframeHeaderBackgroundColor = "#1A262B"
+dataframeHeaderTextColor = "#EEF3F4"
 
-font = "'IBM Plex Sans':https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap, sans-serif"
-headingFont = "'Source Serif 4':https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap, serif"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap, sans-serif"
+headingFont = "Outfit:https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&display=swap, sans-serif"
 codeFont = "'IBM Plex Mono':https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap, monospace"
-headingFontSizes = ["2.4rem", "1.6rem", "1.3rem", "1.05rem", "1rem", "0.9rem"]
-headingFontWeights = [600, 600, 600, 600, 500, 500]
-metricValueFontSize = "1.9rem"
-metricValueFontWeight = 600
+headingFontSizes = ["2.5rem", "1.55rem", "1.25rem", "1.05rem", "1rem", "0.9rem"]
+headingFontWeights = [700, 600, 600, 600, 500, 500]
+metricValueFontSize = "1.8rem"
+metricValueFontWeight = 700
 
-baseRadius = "10px"
-buttonRadius = "8px"
+baseRadius = "12px"
+buttonRadius = "10px"
 showWidgetBorder = true
-paddingTop = "1.5rem"
-paddingBottom = "3rem"
+paddingTop = "1rem"
+paddingBottom = "2rem"
 
-chartCategoricalColors = ["#0B6E69", "#B7791F", "#6B7C80", "#B4452F", "#8FC1BC"]
+chartCategoricalColors = ["#5EC4B0", "#E2B45A", "#8B9BA3", "#E07A5F", "#6FA8DC"]
 
 [client]
 toolbarMode = "minimal"

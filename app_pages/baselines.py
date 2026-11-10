@@ -77,8 +77,12 @@ st.dataframe(
 
 a, b = st.columns(2, gap="large")
 with a:
-    st.markdown("**Does the full model beat each baseline?**")
-    ui.chart(charts.paired_forest(paired), alt="Paired differences in balanced accuracy against each baseline")
+    ui.chart(
+        charts.paired_forest(paired), alt="Paired differences in balanced accuracy against each baseline",
+        title="Does the full model beat each baseline?", sub="model minus baseline, paired 95% interval",
+        what="The selected model's balanced accuracy minus each baseline's, on the same records.",
+        why="This is the question the project exists to answer. Zero inside the interval means no supported gain.",
+    )
     for _, row in paired.iterrows():
         claim = "a supported improvement" if row["significant"] else "no supported difference"
         st.markdown(
@@ -87,9 +91,10 @@ with a:
             f"{ui.holm(row['p_value_holm'])}), {claim}."
         )
 with b:
-    st.markdown("**How stable is the CGPA cutoff?**")
-    ui.chart(charts.cutoff_histogram(cutoffs), alt="Histogram of the CGPA cutoff selected in each of the 50 training folds")
-    st.caption(
-        "Each fold picks its own cutoff from its own training rows. A tight spread means the rule "
-        "barely depends on which records it was fitted on."
+    ui.chart(
+        charts.cutoff_histogram(cutoffs),
+        alt="Histogram of the CGPA cutoff selected in each of the 50 training folds",
+        title="How stable is the CGPA cutoff?", sub="the cutoff chosen in each of the 50 training folds",
+        what="Each fold picks its own CGPA cutoff from its own training rows; this is where they landed.",
+        why="A tight spread means the rule barely depends on which records it was fitted on.",
     )
