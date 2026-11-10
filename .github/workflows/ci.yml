@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      - name: Install pinned dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Parse notebooks and verify they are executed
+        run: python scripts/check_notebooks.py
+
+      - name: Verify committed metrics against a reproducible evaluation (fast mode)
+        run: python scripts/verify_outputs.py
+
+      - name: Import the Streamlit app
+        run: |
+          python - <<'PY'
+          from streamlit.testing.v1 import AppTest
+
+          app = AppTest.from_file("app.py", default_timeout=120).run()
+          assert not app.exception, [e.value for e in app.exception]
+          print("app.py imported and rendered:", app.title[0].value)
+          PY
+
+      - name: Run tests
+        run: pytest -q

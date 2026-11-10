@@ -1,0 +1,7 @@
+target_threshold,research,group,n,n_positive,positive_rate,ci_low,ci_high
+0.7,1,Has research,280,225,0.803571,0.753061,0.845865
+0.7,0,No research,220,75,0.340909,0.281482,0.405796
+0.75,1,Has research,280,184,0.657143,0.599755,0.710277
+0.75,0,No research,220,34,0.154545,0.112751,0.208197
+0.8,1,Has research,280,144,0.514286,0.455948,0.572236
+0.8,0,No research,220,11,0.05,0.028145,0.0873

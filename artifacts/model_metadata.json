@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "model_name": "Logistic Regression",
+  "target_name": "High_Admission_Chance",
+  "target_threshold": 0.75,
+  "classifier_threshold": 0.5,
+  "features": [
+    "GRE_Score",
+    "TOEFL_Score",
+    "University_Rating",
+    "SOP",
+    "LOR",
+    "CGPA",
+    "Research"
+  ],
+  "best_params": {
+    "model__C": 10.0
+  },
+  "inner_cv_balanced_accuracy": 0.87657,
+  "n_training_rows": 500,
+  "n_training_positive": 218,
+  "feature_ranges": {
+    "GRE_Score": {
+      "min": 290.0,
+      "max": 340.0
+    },
+    "TOEFL_Score": {
+      "min": 92.0,
+      "max": 120.0
+    },
+    "University_Rating": {
+      "min": 1.0,
+      "max": 5.0
+    },
+    "SOP": {
+      "min": 1.0,
+      "max": 5.0
+    },
+    "LOR": {
+      "min": 1.0,
+      "max": 5.0
+    },
+    "CGPA": {
+      "min": 6.8,
+      "max": 9.92
+    },
+    "Research": {
+      "min": 0.0,
+      "max": 1.0
+    }
+  },
+  "data_sha256": "9559c8d163696f5521a57e5d0c97b01e07b02fcfa36125c0fa2b934213f12186",
+  "scikit_learn_version": "1.9.1",
+  "parity": {
+    "description": "in-sample probabilities used to check the saved pipeline",
+    "first_rows_probability": [
+      0.99917482,
+      0.89150409,
+      0.04411747,
+      0.57243578,
+      0.01696285
+    ],
+    "mean_probability": 0.43604435,
+    "n_predicted_positive": 211
+  },
+  "note": "In-sample numbers above are only a reproducibility check. Performance estimates come from outputs/model_evaluation.json."
+}

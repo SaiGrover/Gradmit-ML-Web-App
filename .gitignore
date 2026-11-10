@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Secrets and local configuration
+.env
+.env.*
+.streamlit/secrets.toml
+
+# Editors, OS and tooling
+.vscode/
+.idea/
+.claude/
+.DS_Store
+Thumbs.db
+
+# Scratch output
+*.log
+tmp/

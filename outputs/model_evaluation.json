@@ -1,0 +1,678 @@
+{
+  "schema_version": 1,
+  "target": {
+    "name": "High_Admission_Chance",
+    "definition": "1 when the dataset's estimated Chance of Admit is at or above the target threshold; a proxy label, not an observed admission decision",
+    "target_thresholds": [
+      0.7,
+      0.75,
+      0.8
+    ],
+    "default_target_threshold": 0.75,
+    "classifier_threshold": 0.5
+  },
+  "data": {
+    "path": "data/Admission_Predict.csv",
+    "sha256": "9559c8d163696f5521a57e5d0c97b01e07b02fcfa36125c0fa2b934213f12186",
+    "n_rows": 500,
+    "features": [
+      "GRE_Score",
+      "TOEFL_Score",
+      "University_Rating",
+      "SOP",
+      "LOR",
+      "CGPA",
+      "Research"
+    ]
+  },
+  "protocol": {
+    "outer_cv": "RepeatedStratifiedKFold",
+    "n_splits": 5,
+    "n_repeats": 10,
+    "n_folds": 50,
+    "random_state": 42,
+    "inner_cv": "StratifiedKFold(n_splits=5, shuffle=True)",
+    "selection_metric": "balanced_accuracy",
+    "confidence_interval": "Nadeau-Bengio corrected resampled t-interval, 95%",
+    "paired_test": "row-level paired bootstrap CI and paired permutation p-value on cross-fitted predictions, Holm-corrected across the two baselines",
+    "n_resamples": 10000,
+    "hyperparameter_grids": {
+      "Logistic Regression": {
+        "model__C": [
+          0.1,
+          1.0,
+          10.0
+        ]
+      },
+      "Random Forest": {
+        "model__max_depth": [
+          4,
+          null
+        ],
+        "model__min_samples_leaf": [
+          1,
+          5
+        ]
+      },
+      "Hist Gradient Boosting": {
+        "model__learning_rate": [
+          0.05,
+          0.1
+        ],
+        "model__max_depth": [
+          2,
+          3
+        ]
+      },
+      "SVM (RBF)": {
+        "model__estimator__C": [
+          0.1,
+          1.0,
+          10.0
+        ]
+      },
+      "K-Nearest Neighbours": {
+        "model__n_neighbors": [
+          5,
+          11,
+          21
+        ],
+        "model__weights": [
+          "uniform",
+          "distance"
+        ]
+      }
+    }
+  },
+  "selected_model": "Logistic Regression",
+  "selection_rule": "highest mean balanced accuracy over the 50 outer validation folds at the default target threshold; hyperparameters are tuned inside each training fold",
+  "thresholds": {
+    "0.70": {
+      "class_balance": {
+        "target_threshold": 0.7,
+        "n": 500,
+        "n_positive": 300,
+        "n_negative": 200,
+        "positive_share": 0.6,
+        "majority_accuracy": 0.6
+      },
+      "selected_model_cv": {
+        "accuracy": {
+          "mean": 0.8652,
+          "std": 0.026744,
+          "ci_low": 0.837273,
+          "ci_high": 0.893127
+        },
+        "balanced_accuracy": {
+          "mean": 0.862,
+          "std": 0.028986,
+          "ci_low": 0.831733,
+          "ci_high": 0.892267
+        },
+        "precision": {
+          "mean": 0.896621,
+          "std": 0.032616,
+          "ci_low": 0.862564,
+          "ci_high": 0.930679
+        },
+        "recall": {
+          "mean": 0.878,
+          "std": 0.034902,
+          "ci_low": 0.841555,
+          "ci_high": 0.914445
+        },
+        "f1": {
+          "mean": 0.886506,
+          "std": 0.022524,
+          "ci_low": 0.862986,
+          "ci_high": 0.910026
+        },
+        "roc_auc": {
+          "mean": 0.942592,
+          "std": 0.019336,
+          "ci_low": 0.922401,
+          "ci_high": 0.962782
+        },
+        "brier": {
+          "mean": 0.095786,
+          "std": 0.016237,
+          "ci_low": 0.078832,
+          "ci_high": 0.112741
+        }
+      },
+      "majority_baseline_cv": {
+        "accuracy": {
+          "mean": 0.6,
+          "std": 0.0,
+          "ci_low": 0.6,
+          "ci_high": 0.6
+        },
+        "balanced_accuracy": {
+          "mean": 0.5,
+          "std": 0.0,
+          "ci_low": 0.5,
+          "ci_high": 0.5
+        },
+        "precision": {
+          "mean": 0.6,
+          "std": 0.0,
+          "ci_low": 0.6,
+          "ci_high": 0.6
+        },
+        "recall": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0
+        },
+        "f1": {
+          "mean": 0.75,
+          "std": 0.0,
+          "ci_low": 0.75,
+          "ci_high": 0.75
+        },
+        "roc_auc": {
+          "mean": 0.5,
+          "std": 0.0,
+          "ci_low": 0.5,
+          "ci_high": 0.5
+        },
+        "brier": {
+          "mean": 0.4,
+          "std": 0.0,
+          "ci_low": 0.4,
+          "ci_high": 0.4
+        }
+      },
+      "cgpa_cutoff_baseline_cv": {
+        "accuracy": {
+          "mean": 0.8148,
+          "std": 0.038132,
+          "ci_low": 0.774982,
+          "ci_high": 0.854618
+        },
+        "balanced_accuracy": {
+          "mean": 0.819833,
+          "std": 0.04342,
+          "ci_low": 0.774494,
+          "ci_high": 0.865173
+        },
+        "precision": {
+          "mean": 0.89094,
+          "std": 0.056397,
+          "ci_low": 0.83205,
+          "ci_high": 0.94983
+        },
+        "recall": {
+          "mean": 0.794667,
+          "std": 0.065417,
+          "ci_low": 0.726358,
+          "ci_high": 0.862975
+        },
+        "f1": {
+          "mean": 0.836812,
+          "std": 0.035622,
+          "ci_low": 0.799615,
+          "ci_high": 0.874009
+        },
+        "roc_auc": {
+          "mean": 0.919933,
+          "std": 0.024405,
+          "ci_low": 0.89445,
+          "ci_high": 0.945417
+        },
+        "brier": {
+          "mean": null,
+          "std": null,
+          "ci_low": null,
+          "ci_high": null
+        }
+      },
+      "model_ranking": [
+        "Logistic Regression",
+        "SVM (RBF)",
+        "Random Forest",
+        "Hist Gradient Boosting",
+        "K-Nearest Neighbours"
+      ],
+      "paired_tests": [
+        {
+          "model": "Logistic Regression",
+          "baseline": "Majority baseline",
+          "metric": "balanced_accuracy",
+          "difference": 0.360833,
+          "ci_low": 0.328142,
+          "ci_high": 0.391517,
+          "p_value": 0.0001,
+          "p_value_holm": 0.0002,
+          "significant": true,
+          "n_resamples": 10000
+        },
+        {
+          "model": "Logistic Regression",
+          "baseline": "CGPA cutoff baseline",
+          "metric": "balanced_accuracy",
+          "difference": 0.0275,
+          "ci_low": 0.001106,
+          "ci_high": 0.052805,
+          "p_value": 0.037996,
+          "p_value_holm": 0.037996,
+          "significant": true,
+          "n_resamples": 10000
+        }
+      ],
+      "cross_fitted": {
+        "confusion_matrix": {
+          "tn": 169,
+          "fp": 31,
+          "fn": 37,
+          "tp": 263
+        },
+        "metrics": {
+          "accuracy": 0.864,
+          "balanced_accuracy": 0.860833,
+          "precision": 0.894558,
+          "recall": 0.876667,
+          "f1": 0.885522,
+          "roc_auc": 0.941583,
+          "brier": 0.095131
+        }
+      }
+    },
+    "0.75": {
+      "class_balance": {
+        "target_threshold": 0.75,
+        "n": 500,
+        "n_positive": 218,
+        "n_negative": 282,
+        "positive_share": 0.436,
+        "majority_accuracy": 0.564
+      },
+      "selected_model_cv": {
+        "accuracy": {
+          "mean": 0.8848,
+          "std": 0.031574,
+          "ci_low": 0.851831,
+          "ci_high": 0.917769
+        },
+        "balanced_accuracy": {
+          "mean": 0.880914,
+          "std": 0.032494,
+          "ci_low": 0.846984,
+          "ci_high": 0.914844
+        },
+        "precision": {
+          "mean": 0.883576,
+          "std": 0.045326,
+          "ci_low": 0.836247,
+          "ci_high": 0.930906
+        },
+        "recall": {
+          "mean": 0.850148,
+          "std": 0.052835,
+          "ci_low": 0.794977,
+          "ci_high": 0.905319
+        },
+        "f1": {
+          "mean": 0.865302,
+          "std": 0.037409,
+          "ci_low": 0.826239,
+          "ci_high": 0.904365
+        },
+        "roc_auc": {
+          "mean": 0.96046,
+          "std": 0.013124,
+          "ci_low": 0.946755,
+          "ci_high": 0.974164
+        },
+        "brier": {
+          "mean": 0.081334,
+          "std": 0.016138,
+          "ci_low": 0.064482,
+          "ci_high": 0.098185
+        }
+      },
+      "majority_baseline_cv": {
+        "accuracy": {
+          "mean": 0.564,
+          "std": 0.004949,
+          "ci_low": 0.558833,
+          "ci_high": 0.569167
+        },
+        "balanced_accuracy": {
+          "mean": 0.5,
+          "std": 0.0,
+          "ci_low": 0.5,
+          "ci_high": 0.5
+        },
+        "precision": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0
+        },
+        "recall": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0
+        },
+        "f1": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0
+        },
+        "roc_auc": {
+          "mean": 0.5,
+          "std": 0.0,
+          "ci_low": 0.5,
+          "ci_high": 0.5
+        },
+        "brier": {
+          "mean": 0.436,
+          "std": 0.004949,
+          "ci_low": 0.430833,
+          "ci_high": 0.441167
+        }
+      },
+      "cgpa_cutoff_baseline_cv": {
+        "accuracy": {
+          "mean": 0.876,
+          "std": 0.027775,
+          "ci_low": 0.846998,
+          "ci_high": 0.905002
+        },
+        "balanced_accuracy": {
+          "mean": 0.875121,
+          "std": 0.026994,
+          "ci_low": 0.846934,
+          "ci_high": 0.903309
+        },
+        "precision": {
+          "mean": 0.855174,
+          "std": 0.05308,
+          "ci_low": 0.799747,
+          "ci_high": 0.910601
+        },
+        "recall": {
+          "mean": 0.867949,
+          "std": 0.05275,
+          "ci_low": 0.812868,
+          "ci_high": 0.923031
+        },
+        "f1": {
+          "mean": 0.859294,
+          "std": 0.030309,
+          "ci_low": 0.827645,
+          "ci_high": 0.890943
+        },
+        "roc_auc": {
+          "mean": 0.952729,
+          "std": 0.01634,
+          "ci_low": 0.935667,
+          "ci_high": 0.969792
+        },
+        "brier": {
+          "mean": null,
+          "std": null,
+          "ci_low": null,
+          "ci_high": null
+        }
+      },
+      "model_ranking": [
+        "Logistic Regression",
+        "Random Forest",
+        "Hist Gradient Boosting",
+        "SVM (RBF)",
+        "K-Nearest Neighbours"
+      ],
+      "paired_tests": [
+        {
+          "model": "Logistic Regression",
+          "baseline": "Majority baseline",
+          "metric": "balanced_accuracy",
+          "difference": 0.3828,
+          "ci_low": 0.35346,
+          "ci_high": 0.410691,
+          "p_value": 0.0001,
+          "p_value_holm": 0.0002,
+          "significant": true,
+          "n_resamples": 10000
+        },
+        {
+          "model": "Logistic Regression",
+          "baseline": "CGPA cutoff baseline",
+          "metric": "balanced_accuracy",
+          "difference": 0.002717,
+          "ci_low": -0.019699,
+          "ci_high": 0.024834,
+          "p_value": 0.79932,
+          "p_value_holm": 0.79932,
+          "significant": false,
+          "n_resamples": 10000
+        }
+      ],
+      "cross_fitted": {
+        "confusion_matrix": {
+          "tn": 256,
+          "fp": 26,
+          "fn": 31,
+          "tp": 187
+        },
+        "metrics": {
+          "accuracy": 0.886,
+          "balanced_accuracy": 0.8828,
+          "precision": 0.877934,
+          "recall": 0.857798,
+          "f1": 0.867749,
+          "roc_auc": 0.959675,
+          "brier": 0.080572
+        }
+      }
+    },
+    "0.80": {
+      "class_balance": {
+        "target_threshold": 0.8,
+        "n": 500,
+        "n_positive": 155,
+        "n_negative": 345,
+        "positive_share": 0.31,
+        "majority_accuracy": 0.69
+      },
+      "selected_model_cv": {
+        "accuracy": {
+          "mean": 0.9256,
+          "std": 0.025084,
+          "ci_low": 0.899407,
+          "ci_high": 0.951793
+        },
+        "balanced_accuracy": {
+          "mean": 0.910379,
+          "std": 0.031676,
+          "ci_low": 0.877302,
+          "ci_high": 0.943455
+        },
+        "precision": {
+          "mean": 0.89173,
+          "std": 0.057894,
+          "ci_low": 0.831277,
+          "ci_high": 0.952184
+        },
+        "recall": {
+          "mean": 0.870323,
+          "std": 0.063014,
+          "ci_low": 0.804523,
+          "ci_high": 0.936122
+        },
+        "f1": {
+          "mean": 0.878616,
+          "std": 0.040935,
+          "ci_low": 0.835872,
+          "ci_high": 0.92136
+        },
+        "roc_auc": {
+          "mean": 0.9777,
+          "std": 0.011443,
+          "ci_low": 0.965751,
+          "ci_high": 0.989649
+        },
+        "brier": {
+          "mean": 0.055688,
+          "std": 0.013062,
+          "ci_low": 0.042049,
+          "ci_high": 0.069327
+        }
+      },
+      "majority_baseline_cv": {
+        "accuracy": {
+          "mean": 0.69,
+          "std": 0.0,
+          "ci_low": 0.69,
+          "ci_high": 0.69
+        },
+        "balanced_accuracy": {
+          "mean": 0.5,
+          "std": 0.0,
+          "ci_low": 0.5,
+          "ci_high": 0.5
+        },
+        "precision": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0
+        },
+        "recall": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0
+        },
+        "f1": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0
+        },
+        "roc_auc": {
+          "mean": 0.5,
+          "std": 0.0,
+          "ci_low": 0.5,
+          "ci_high": 0.5
+        },
+        "brier": {
+          "mean": 0.31,
+          "std": 0.0,
+          "ci_low": 0.31,
+          "ci_high": 0.31
+        }
+      },
+      "cgpa_cutoff_baseline_cv": {
+        "accuracy": {
+          "mean": 0.9198,
+          "std": 0.02832,
+          "ci_low": 0.890229,
+          "ci_high": 0.949371
+        },
+        "balanced_accuracy": {
+          "mean": 0.918434,
+          "std": 0.028114,
+          "ci_low": 0.889077,
+          "ci_high": 0.94779
+        },
+        "precision": {
+          "mean": 0.844387,
+          "std": 0.058822,
+          "ci_low": 0.782965,
+          "ci_high": 0.905809
+        },
+        "recall": {
+          "mean": 0.914839,
+          "std": 0.042115,
+          "ci_low": 0.870862,
+          "ci_high": 0.958815
+        },
+        "f1": {
+          "mean": 0.876869,
+          "std": 0.040333,
+          "ci_low": 0.834753,
+          "ci_high": 0.918984
+        },
+        "roc_auc": {
+          "mean": 0.972712,
+          "std": 0.011172,
+          "ci_low": 0.961046,
+          "ci_high": 0.984377
+        },
+        "brier": {
+          "mean": null,
+          "std": null,
+          "ci_low": null,
+          "ci_high": null
+        }
+      },
+      "model_ranking": [
+        "Logistic Regression",
+        "Hist Gradient Boosting",
+        "SVM (RBF)",
+        "Random Forest",
+        "K-Nearest Neighbours"
+      ],
+      "paired_tests": [
+        {
+          "model": "Logistic Regression",
+          "baseline": "Majority baseline",
+          "metric": "balanced_accuracy",
+          "difference": 0.410846,
+          "ci_low": 0.381898,
+          "ci_high": 0.438329,
+          "p_value": 0.0001,
+          "p_value_holm": 0.0002,
+          "significant": true,
+          "n_resamples": 10000
+        },
+        {
+          "model": "Logistic Regression",
+          "baseline": "CGPA cutoff baseline",
+          "metric": "balanced_accuracy",
+          "difference": -0.009537,
+          "ci_low": -0.033221,
+          "ci_high": 0.012963,
+          "p_value": 0.421358,
+          "p_value_holm": 0.421358,
+          "significant": false,
+          "n_resamples": 10000
+        }
+      ],
+      "cross_fitted": {
+        "confusion_matrix": {
+          "tn": 328,
+          "fp": 17,
+          "fn": 20,
+          "tp": 135
+        },
+        "metrics": {
+          "accuracy": 0.926,
+          "balanced_accuracy": 0.910846,
+          "precision": 0.888158,
+          "recall": 0.870968,
+          "f1": 0.879479,
+          "roc_auc": 0.976868,
+          "brier": 0.054634
+        }
+      }
+    }
+  },
+  "legacy": {
+    "retired_result": "91.2% accuracy from a single 75/25 split",
+    "note": "Retired. It came from one split with no baseline and described the proxy label as admission. It is not a result of this evaluation."
+  },
+  "environment": {
+    "python": "3.13.11",
+    "scikit_learn": "1.9.1",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scipy": "1.18.1"
+  }
+}

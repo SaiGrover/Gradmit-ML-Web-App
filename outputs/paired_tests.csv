@@ -1,0 +1,7 @@
+target_threshold,model,baseline,metric,difference,ci_low,ci_high,p_value,p_value_holm,significant,n_resamples
+0.7,Logistic Regression,Majority baseline,balanced_accuracy,0.360833,0.328142,0.391517,0.0001,0.0002,True,10000
+0.7,Logistic Regression,CGPA cutoff baseline,balanced_accuracy,0.0275,0.001106,0.052805,0.037996,0.037996,True,10000
+0.75,Logistic Regression,Majority baseline,balanced_accuracy,0.3828,0.35346,0.410691,0.0001,0.0002,True,10000
+0.75,Logistic Regression,CGPA cutoff baseline,balanced_accuracy,0.002717,-0.019699,0.024834,0.79932,0.79932,False,10000
+0.8,Logistic Regression,Majority baseline,balanced_accuracy,0.410846,0.381898,0.438329,0.0001,0.0002,True,10000
+0.8,Logistic Regression,CGPA cutoff baseline,balanced_accuracy,-0.009537,-0.033221,0.012963,0.421358,0.421358,False,10000

@@ -1,0 +1,9 @@
+# Tests, linting and the notebook workflow.
+-r requirements.txt
+pytest==9.2.0
+ruff==0.17.4
+matplotlib==3.11.2
+nbclient==0.10.2
+nbformat==5.10.4
+nbconvert==7.16.6
+ipykernel==6.30.0
