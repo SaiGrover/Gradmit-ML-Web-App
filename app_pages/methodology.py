@@ -7,12 +7,12 @@ meta = ui.metadata()
 protocol = evaluation["protocol"]
 env = evaluation["environment"]
 
-st.title("Methodology and limitations")
+st.title("Methodology and limitations", icon=":material/menu_book:")
 
 left, right = st.columns(2, gap="large")
 
 with left:
-    st.subheader("What is being predicted")
+    st.subheader("What is being predicted", icon=":material/target:")
     st.markdown(
         f"The target is `{evaluation['target']['name']}`: 1 when the dataset's estimated "
         "`Chance of Admit` is at or above a target threshold, otherwise 0. The dataset records "
@@ -22,7 +22,7 @@ with left:
         f"- Classifier decision threshold: {evaluation['target']['classifier_threshold']:.2f}"
     )
 
-    st.subheader("Data")
+    st.subheader("Data", icon=":material/dataset:")
     st.markdown(
         "Graduate Admission dataset (Mohan S. Acharya, Asfia Armaan and Aneeta S. Antony, 2019), "
         f"distributed on Kaggle. {evaluation['data']['n_rows']} records, seven features: GRE, "
@@ -30,7 +30,7 @@ with left:
         "CGPA and a research-experience flag. No missing values and no duplicate rows."
     )
 
-    st.subheader("Evaluation protocol")
+    st.subheader("Evaluation protocol", icon=":material/account_tree:")
     st.markdown(
         f"1. **Outer loop.** `{protocol['outer_cv']}` with {protocol['n_splits']} folds and "
         f"{protocol['n_repeats']} repeats, seed {protocol['random_state']}: "
@@ -50,7 +50,7 @@ with left:
     )
 
 with right:
-    st.subheader("Limitations")
+    st.subheader("Limitations", icon=":material/warning:")
     st.markdown(
         "- **No real outcomes.** Nothing here was validated against an admission decision.\n"
         "- **The label is a cut on a continuous estimate.** Records near the cut are labelled "
@@ -67,7 +67,7 @@ with right:
         "- **Not advice.** The predictor describes a dataset. It is not guidance on applying."
     )
 
-    st.subheader("Deployed model")
+    st.subheader("Deployed model", icon=":material/deployed_code:")
     st.markdown(
         f"- Model: {meta['model_name']} with `{meta['best_params']}`\n"
         f"- Trained on all {meta['n_training_rows']} records at target threshold "
@@ -75,7 +75,7 @@ with right:
         f"- Loaded from `artifacts/gradmit_pipeline.joblib`; the app never trains a model"
     )
 
-    st.subheader("Reproducing the results")
+    st.subheader("Reproducing the results", icon=":material/replay:")
     st.code(
         "python scripts/evaluate_models.py\n"
         "python scripts/train_final_model.py\n"

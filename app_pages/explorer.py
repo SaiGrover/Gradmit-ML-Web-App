@@ -9,7 +9,7 @@ SHORT_LABELS = {
     "LOR": "LOR", "CGPA": "CGPA", "Research": "Research", SCORE_COLUMN: "Chance of Admit",
 }
 
-st.title("Data explorer")
+st.title("Data explorer", icon=":material/table_chart:")
 st.markdown(
     "All 500 records of the Graduate Admission dataset. `Chance of Admit` is the dataset's own "
     "estimated score; the proxy label is computed from it at the threshold you choose."
@@ -18,7 +18,7 @@ threshold = ui.threshold_control("explorer")
 target = make_target(df, threshold)
 data = df.assign(**{TARGET_NAME: target})
 
-st.subheader("Research experience and high estimated admission chance")
+st.subheader("Research experience and high estimated admission chance", icon=":material/science:")
 research = ui.at_threshold(ui.output("research"), threshold)
 has = research[research["research"] == 1].iloc[0]
 none = research[research["research"] == 0].iloc[0]
@@ -44,7 +44,7 @@ with text_col:
         title="An association, not a causal effect",
     )
 
-st.subheader("Feature distributions")
+st.subheader("Feature distributions", icon=":material/bar_chart:")
 feature = st.selectbox("Feature", FEATURES, index=FEATURES.index("CGPA"), format_func=FEATURE_LABELS.get)
 left, right = st.columns(2, gap="large")
 with left:
@@ -62,7 +62,7 @@ with right:
         "with the score. Correlation here describes this sample only."
     )
 
-st.subheader("Records")
+st.subheader("Records", icon=":material/table_rows:")
 with st.container(horizontal=True, vertical_alignment="bottom"):
     label_filter = st.segmented_control(
         "Proxy label", ["All", "Proxy-positive", "Proxy-negative"], default="All", required=True

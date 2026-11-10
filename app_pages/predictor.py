@@ -13,7 +13,7 @@ target_threshold = meta["target_threshold"]
 classifier_threshold = meta["classifier_threshold"]
 cv = evaluation["thresholds"][f"{target_threshold:.2f}"]["selected_model_cv"]
 
-st.title("Profile predictor")
+st.title("Profile predictor", icon=":material/person_search:")
 st.markdown(
     f"Enter a profile to estimate the probability that the dataset's `Chance of Admit` score "
     f"for it would be at or above **{target_threshold:.2f}**. This is a dataset-proxy estimate, "
@@ -28,7 +28,7 @@ with st.container(horizontal=True):
 form_col, result_col = st.columns([5, 6], gap="large")
 
 with form_col, st.form("profile"):
-    st.subheader("Profile")
+    st.subheader("Profile", icon=":material/person:")
     a, b = st.columns(2)
     gre = a.number_input("GRE score", min_value=260, max_value=340, value=317, step=1,
                          help=f"Training range {ranges['GRE_Score']['min']:.0f} to {ranges['GRE_Score']['max']:.0f}")
@@ -56,7 +56,7 @@ profile = {
 }
 
 with result_col:
-    st.subheader("Estimate")
+    st.subheader("Estimate", icon=":material/percent:")
     try:
         row = validate_profile(profile)
     except ValueError as exc:
@@ -103,7 +103,7 @@ with result_col:
         "evaluation page."
     )
 
-st.subheader("How this profile sits in the data")
+st.subheader("How this profile sits in the data", icon=":material/my_location:")
 percentiles = pd.DataFrame(
     {
         "Feature": [FEATURE_LABELS[f] for f in FEATURES],

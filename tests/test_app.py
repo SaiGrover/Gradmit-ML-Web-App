@@ -3,7 +3,7 @@ import re
 import pytest
 from streamlit.testing.v1 import AppTest
 
-PAGES = ["overview", "predictor", "evaluation", "baselines", "sensitivity", "explorer", "methodology"]
+PAGES = ["problem", "overview", "predictor", "evaluation", "baselines", "sensitivity", "explorer", "methodology"]
 FORBIDDEN = [
     r"will be admitted",
     r"admission outcome",
@@ -16,7 +16,7 @@ FORBIDDEN = [
 
 def run_page(root, page: str) -> AppTest:
     at = AppTest.from_file(str(root / "app.py"), default_timeout=60).run()
-    if page != "overview":
+    if page != "problem":
         at.switch_page(f"app_pages/{page}.py").run()
     return at
 
@@ -26,6 +26,16 @@ def test_page_renders_without_exception(root, page):
     at = run_page(root, page)
     assert not at.exception, [e.value for e in at.exception]
     assert len(at.title) == 1
+
+
+def test_landing_page_is_the_problem_statement(root):
+    at = AppTest.from_file(str(root / "app.py"), default_timeout=60).run()
+    assert at.title[0].value == "Problem statement"
+    text = " ".join(m.value for m in at.markdown)
+    assert "Chance of Admit" in text and "CGPA cutoff" in text
+    # Short answers are read from committed outputs, not typed in.
+    assert "beats the CGPA cutoff only at 0.70" in text.replace("It beats", "beats")
+    assert "65.7% with research (n=280)" in text and "15.5% without (n=220)" in text
 
 
 def test_overview_states_the_proxy_framing(root):

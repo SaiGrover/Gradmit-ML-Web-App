@@ -15,7 +15,7 @@ cgpa_ba = block["cgpa_cutoff_baseline_cv"]["balanced_accuracy"]
 vs_cgpa = paired.loc[CGPA_CUTOFF]
 vs_majority = paired.loc[MAJORITY]
 
-st.title("How much does a full model add over one CGPA cutoff?")
+st.title("How much does a full model add over one CGPA cutoff?", icon=":material/home:")
 st.markdown(
     "GradMit studies 500 applicant profiles from the Graduate Admission dataset. The dataset "
     "holds no admission decisions. Its `Chance of Admit` column is an estimated score, so this "
@@ -26,7 +26,7 @@ st.markdown(
 lead, side = st.columns([3, 2], gap="large")
 
 with lead:
-    st.subheader(f"Balanced accuracy at target threshold {DEFAULT_TARGET_THRESHOLD:.2f}")
+    st.subheader(f"Balanced accuracy at target threshold {DEFAULT_TARGET_THRESHOLD:.2f}", icon=":material/bar_chart:")
     ui.chart(
         charts.interval_chart(comparison, "balanced_accuracy", selected),
         alt="Mean balanced accuracy and 95% confidence interval for every model and baseline",
@@ -37,8 +37,8 @@ with lead:
         "ochre the two baselines."
     )
 
-with side:
-    st.subheader("What the evaluation found")
+with side, st.container(border=True):
+    st.subheader("What the evaluation found", icon=":material/insights:")
     if vs_cgpa["significant"]:
         verdict = (
             f"{selected} improves on the CGPA cutoff by {vs_cgpa['difference']:+.3f} balanced "
@@ -65,7 +65,7 @@ with side:
     st.page_link("app_pages/evaluation.py", label="See the full model evaluation", icon=":material/monitoring:")
     st.page_link("app_pages/sensitivity.py", label="Compare thresholds 0.70, 0.75 and 0.80", icon=":material/tune:")
 
-st.subheader("The data and the label")
+st.subheader("The data and the label", icon=":material/dataset:")
 with st.container(horizontal=True):
     st.metric("Records", f"{balance['n']}", border=True)
     st.metric("Features", f"{len(evaluation['data']['features'])}", border=True)
@@ -77,7 +77,7 @@ with st.container(horizontal=True):
     st.metric("Majority-class accuracy", ui.pct(balance["majority_accuracy"]), border=True)
 
 left, right = st.columns(2, gap="large")
-with left:
+with left, st.container(border=True, height="stretch"):
     st.markdown(
         "**Two thresholds, kept separate**\n\n"
         "- The **target threshold** (0.70, 0.75 or 0.80) defines the label from "
@@ -85,7 +85,7 @@ with left:
         "- The **classifier decision threshold** (0.50) turns the model's probability into a "
         "predicted class."
     )
-with right:
+with right, st.container(border=True, height="stretch"):
     st.markdown(
         "**What this app does not claim**\n\n"
         "- It does not say whether any university would accept an applicant.\n"

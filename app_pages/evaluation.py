@@ -9,7 +9,7 @@ evaluation = ui.evaluation()
 selected = evaluation["selected_model"]
 protocol = evaluation["protocol"]
 
-st.title("Model evaluation")
+st.title("Model evaluation", icon=":material/monitoring:")
 st.markdown(
     f"Five model families and two baselines, scored on the same {protocol['n_folds']} validation "
     f"folds ({protocol['n_splits']}-fold stratified cross-validation repeated "
@@ -24,7 +24,7 @@ paired = ui.at_threshold(ui.output("paired"), threshold)
 block = evaluation["thresholds"][f"{threshold:.2f}"]
 order = comparison["model"].tolist()
 
-st.subheader("Model comparison")
+st.subheader("Model comparison", icon=":material/leaderboard:")
 table = comparison[["model"] + [f"{m}_mean" for m in METRICS] + ["balanced_accuracy_std"]].copy()
 table["Kind"] = ["Baseline" if m in BASELINES else ("Selected" if m == selected else "Model") for m in table["model"]]
 table["Balanced accuracy 95% CI"] = [
@@ -49,7 +49,7 @@ st.caption(
     "records by CGPA."
 )
 
-st.subheader("Repeated cross-validation distributions")
+st.subheader("Repeated cross-validation distributions", icon=":material/scatter_plot:")
 metric = st.segmented_control(
     "Metric",
     options=METRICS,
@@ -72,7 +72,7 @@ with right:
     )
     st.caption(f"{protocol['confidence_interval']}.")
 
-st.subheader(f"Paired tests: {selected} against each baseline")
+st.subheader(f"Paired tests: {selected} against each baseline", icon=":material/balance:")
 tests_col, forest_col = st.columns([7, 5], gap="large")
 with tests_col:
     view = paired.assign(
@@ -101,7 +101,7 @@ with tests_col:
 with forest_col:
     ui.chart(charts.paired_forest(paired), alt="Paired differences in balanced accuracy with 95% confidence intervals")
 
-st.subheader(f"Cross-fitted diagnostics for {selected}")
+st.subheader(f"Cross-fitted diagnostics for {selected}", icon=":material/stethoscope:")
 st.markdown(
     "Each record's out-of-fold probability is averaged over the ten repeats, giving one "
     "prediction per record that never came from a model trained on that record."
@@ -123,7 +123,7 @@ with d:
     st.markdown("**Precision-recall curve**")
     ui.chart(charts.pr_chart(rows["y_true"], rows["mean_oof_prob"]), alt="Cross-fitted precision-recall curve")
 
-st.subheader("Error analysis")
+st.subheader("Error analysis", icon=":material/error_med:")
 errors = error_frame(ui.dataset(), ui.output("oof"), threshold, selected)
 n_err = int(errors["error"].sum())
 st.markdown(

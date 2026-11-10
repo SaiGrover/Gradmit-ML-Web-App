@@ -73,6 +73,13 @@ def threshold_control(page: str) -> float:
     return float(choice)
 
 
+def page_header(title: str, *, icon: str, lede: str | None = None) -> None:
+    """Shared page heading: a titled, iconed header with an optional one-paragraph lede."""
+    st.title(title, icon=icon)
+    if lede:
+        st.markdown(lede)
+
+
 def chart(fig, alt: str) -> None:
     st.plotly_chart(fig, config=PLOT_CONFIG, alt=alt)
 

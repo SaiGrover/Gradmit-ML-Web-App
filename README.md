@@ -60,8 +60,9 @@ streamlit run app.py
 The app loads the committed pipeline in `artifacts/` and the committed results in `outputs/`. It
 never trains or evaluates a model at start-up.
 
-App pages: Overview, Profile predictor, Model evaluation, Baselines, Threshold sensitivity, Data
-explorer, Methodology.
+App pages, grouped in the top navigation: Problem statement (the landing page) and Overview;
+Results (Model evaluation, Baselines, Threshold sensitivity); Explore (Profile predictor, Data
+explorer); About (Methodology).
 
 ## Reproduce the evaluation
 
@@ -226,6 +227,7 @@ saved pipeline against a fresh fit.
 ```text
 app.py                      Streamlit entry point (navigation only)
 app_pages/                  One script per app page
+assets/                     Logo and icon used by the app header and browser tab
 gradmit/
 ├── data.py                 Loading, schema, proxy-target construction, input validation
 ├── evaluation.py           CV protocol, metrics, fold summaries and intervals

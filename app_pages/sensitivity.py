@@ -7,7 +7,7 @@ evaluation = ui.evaluation()
 selected = evaluation["selected_model"]
 sensitivity = ui.output("sensitivity")
 
-st.title("Threshold sensitivity")
+st.title("Threshold sensitivity", icon=":material/tune:")
 st.markdown(
     "The label depends on where `Chance of Admit` is cut. The whole evaluation was repeated at "
     "three target thresholds. Switching below reads committed results; nothing is retrained in "

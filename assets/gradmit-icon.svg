@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="GradMit">
+  <rect x="4" y="4" width="32" height="32" rx="8" fill="#0B6E69"/>
+  <path d="M10 29 C15 29 16 13 20 13 C24 13 25 29 30 29" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>
+  <line x1="9" y1="20" x2="31" y2="20" stroke="#E8B04B" stroke-width="2" stroke-dasharray="3 2"/>
+</svg>

@@ -2,17 +2,38 @@
 base = "light"
 primaryColor = "#0B6E69"
 backgroundColor = "#FAFBFA"
-secondaryBackgroundColor = "#EEF2F0"
+secondaryBackgroundColor = "#EEF3F1"
 textColor = "#14282E"
 linkColor = "#0B6E69"
 borderColor = "#D5DEDB"
+codeBackgroundColor = "#EEF3F1"
+
+# Palette used by badges, callouts and colored markdown, tuned to the chart colours.
+blueColor = "#2A6F97"
+greenColor = "#0B6E69"
+orangeColor = "#B7791F"
+redColor = "#B4452F"
+grayColor = "#6B7C80"
+violetColor = "#6A5C8E"
+
 dataframeBorderColor = "#D5DEDB"
+dataframeHeaderBackgroundColor = "#E4ECE9"
+dataframeHeaderTextColor = "#14282E"
+
 font = "'IBM Plex Sans':https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap, sans-serif"
 headingFont = "'Source Serif 4':https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap, serif"
 codeFont = "'IBM Plex Mono':https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap, monospace"
-headingFontWeights = 600
-baseRadius = "6px"
+headingFontSizes = ["2.4rem", "1.6rem", "1.3rem", "1.05rem", "1rem", "0.9rem"]
+headingFontWeights = [600, 600, 600, 600, 500, 500]
+metricValueFontSize = "1.9rem"
+metricValueFontWeight = 600
+
+baseRadius = "10px"
+buttonRadius = "8px"
 showWidgetBorder = true
+paddingTop = "1.5rem"
+paddingBottom = "3rem"
+
 chartCategoricalColors = ["#0B6E69", "#B7791F", "#6B7C80", "#B4452F", "#8FC1BC"]
 
 [client]

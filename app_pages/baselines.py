@@ -7,7 +7,7 @@ from gradmit.baselines import CGPA_CUTOFF, MAJORITY
 evaluation = ui.evaluation()
 selected = evaluation["selected_model"]
 
-st.title("Baselines")
+st.title("Baselines", icon=":material/straighten:")
 st.markdown(
     "A model result means little without something simple to beat. Both baselines are scored on "
     "exactly the same 50 validation folds as every model."
@@ -25,7 +25,7 @@ cutoffs = folds.loc[folds["model"] == CGPA_CUTOFF, "cgpa_cutoff"]
 
 left, right = st.columns(2, gap="large")
 with left, st.container(border=True, height="stretch"):
-    st.subheader("Majority baseline")
+    st.subheader("Majority baseline", icon=":material/groups:")
     st.markdown(
         "`DummyClassifier(strategy=\"most_frequent\")` predicts the larger class of the training "
         "fold for every record."
@@ -40,7 +40,7 @@ with left, st.container(border=True, height="stretch"):
         st.metric("Accuracy", ui.pct(majority_cv["accuracy"]["mean"]))
         st.metric("Balanced accuracy", ui.pct(majority_cv["balanced_accuracy"]["mean"]))
 with right, st.container(border=True, height="stretch"):
-    st.subheader("CGPA cutoff baseline")
+    st.subheader("CGPA cutoff baseline", icon=":material/school:")
     st.markdown(
         "One rule: predict proxy-positive when `CGPA >= cutoff`. In each fold the cutoff is "
         "chosen on the training rows to maximise balanced accuracy, frozen, then applied to the "
@@ -54,7 +54,7 @@ with right, st.container(border=True, height="stretch"):
         st.metric("Accuracy", ui.pct(cgpa_cv["accuracy"]["mean"]))
         st.metric("Balanced accuracy", ui.pct(cgpa_cv["balanced_accuracy"]["mean"]))
 
-st.subheader("Side by side")
+st.subheader("Side by side", icon=":material/compare_arrows:")
 summary = pd.DataFrame(
     [
         {
